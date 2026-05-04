@@ -28,6 +28,20 @@ export default function App() {
   const [random2, setRandom2] = useState([]);
   const [bottomConstituency, setBottomConstituency] = useState(null);
   const [headlineIndex, setHeadlineIndex] = useState(0);
+  const [scale, setScale] = useState(1);
+
+  // Calculate scale for responsive fitting
+  useEffect(() => {
+    const updateScale = () => {
+      const scaleX = window.innerWidth / 1920;
+      const scaleY = window.innerHeight / 1080;
+      setScale(Math.min(scaleX, scaleY, 1)); // Cap at 1 to not scale up beyond 1920x1080
+    };
+    
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
 
   // Fetch initial data
   useEffect(() => {
@@ -112,9 +126,25 @@ export default function App() {
 
   // Get specific parties for top display (TVK, DMK, ADMK, NTK)
   const topDisplayParties = useMemo(() => {
-    return TOP_DISPLAY_PARTIES.map(code => 
-      topParties.find(p => p.code === code)
-    ).filter(Boolean);
+    const parties = TOP_DISPLAY_PARTIES.map(code => {
+      const party = topParties.find(p => p.code === code);
+      if (party) return party;
+      
+      // Return placeholder if party doesn't exist in data
+      return {
+        code: code,
+        tamil: code === 'TVK' ? 'தவக' : code === 'DMK' ? 'திமுக' : code === 'ADMK' ? 'அதிமுக' : 'நாதக',
+        leaderTamil: code === 'TVK' ? 'விஜய்' : code === 'DMK' ? 'மு.க. ஸ்டாலின்' : code === 'ADMK' ? 'எடப்பாடி' : 'சீமான்',
+        leaderImage: `/leaders/${code.toLowerCase()}-${code === 'TVK' ? 'vijay' : code === 'DMK' ? 'stalin' : code === 'ADMK' ? 'eps' : 'seeman'}.png`,
+        symbolImage: `/symbols/${code.toLowerCase()}.png`,
+        color: code === 'TVK' ? '#FF6600' : code === 'DMK' ? '#E32636' : code === 'ADMK' ? '#006400' : '#2E8B57',
+        total: 0,
+        won: 0,
+        leading: 0,
+        votePct: 0
+      };
+    });
+    return parties;
   }, [topParties]);
 
   // Leading party info
@@ -167,7 +197,11 @@ export default function App() {
   }
 
   return (
-    <div className="relative mx-auto w-[1920px] h-[1080px] overflow-hidden bg-white font-sans">
+    <div className="relative w-full h-screen overflow-hidden bg-white font-sans flex items-center justify-center">
+      <div className="w-[1920px] h-[1080px] origin-center" style={{
+        transform: `scale(${scale})`,
+        transformOrigin: 'center center'
+      }}>
       {/* TOP BAR: TVK, DMK, ADMK, NTK with Leader Images */}
       <section className="h-[160px] bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b-4 border-orange-500">
         <div className="h-full flex items-stretch">
@@ -397,6 +431,7 @@ export default function App() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }
