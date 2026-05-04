@@ -13,6 +13,13 @@ const PARTY_PROFILES = {
     image: '/leaders/admk-eps.png',
     symbolImage: '/symbols/admk.png'
   },
+  AIADMK: {
+    leaderTamil: 'எடப்பாடி பழனிசாமி',
+    leaderEnglish: 'Edappadi K. Palaniswami',
+    previousSeats: 66,
+    image: '/leaders/admk-eps.png',
+    symbolImage: '/symbols/admk.png'
+  },
   DMK: {
     leaderTamil: 'மு.க. ஸ்டாலின்',
     leaderEnglish: 'M. K. Stalin',
@@ -101,6 +108,7 @@ export function enrichParty(party) {
 
   return {
     ...party,
+    // Keep party.tamil from backend data (has correct Tamil name)
     leaderTamil: profile.leaderTamil,
     leaderEnglish: profile.leaderEnglish,
     leaderImage: profile.image,

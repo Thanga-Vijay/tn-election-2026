@@ -35,17 +35,23 @@ const FALLBACK_PARTY = {
 const PARTY_MAP = {
   'Tamilaga Vettri Kazhagam - TVK': {
     code: 'TVK',
-    tamil: 'தவக',
+    tamil: 'தமிழக வெற்றி கழகம்',
     color: '#FF6600',
     fullName: 'Tamilaga Vettri Kazhagam'
   },
   'Tamilaga Vettri Kazhagam': {
     code: 'TVK',
-    tamil: 'தவக',
+    tamil: 'தவெக',
     color: '#FF6600',
     fullName: 'Tamilaga Vettri Kazhagam'
   },
   'All India Anna Dravida Munnetra Kazhagam': {
+    code: 'ADMK',
+    tamil: 'அதிமுக',
+    color: '#006400',
+    fullName: 'All India Anna Dravida Munnetra Kazhagam'
+  },
+  'All India Anna Dravida Munnetra Kazhagam (Tamil Nadu)': {
     code: 'ADMK',
     tamil: 'அதிமுக',
     color: '#006400',
@@ -755,3 +761,4 @@ async function scrapeResults() {
 module.exports = {
   scrapeResults
 };
+ 

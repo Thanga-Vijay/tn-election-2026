@@ -13,6 +13,12 @@ const SOCKET_URL = 'http://localhost:3001';
 
 // Specific parties to show at the top
 const TOP_DISPLAY_PARTIES = ['TVK', 'DMK', 'ADMK', 'NTK'];
+const PARTY_DISPLAY_NAMES = {
+  TVK: 'தமிழக வெற்றி கழகம்',
+  DMK: 'திமுக',
+  ADMK: 'அதிமுக',
+  NTK: 'நாதக'
+};
 
 // Helper: Pick random items
 function pickRandom(arr, n) {
@@ -116,8 +122,11 @@ export default function App() {
       .filter(party => party.code !== 'OTH') // Exclude OTH party
       .map((party) => {
         const voteData = voteLookup.get(party.code);
+        // Normalize AIADMK to ADMK for display
+        const normalizedCode = party.code === 'AIADMK' ? 'ADMK' : party.code;
         return enrichParty({
           ...party,
+          code: normalizedCode,
           totalVotes: voteData?.totalVotes ?? 0,
           votePct: voteData?.votePct ?? party.pct
         });
@@ -133,7 +142,7 @@ export default function App() {
       // Return placeholder if party doesn't exist in data
       return {
         code: code,
-        tamil: code === 'TVK' ? 'தவக' : code === 'DMK' ? 'திமுக' : code === 'ADMK' ? 'அதிமுக' : 'நாதக',
+        tamil: PARTY_DISPLAY_NAMES[code] || code,
         leaderTamil: code === 'TVK' ? 'விஜய்' : code === 'DMK' ? 'மு.க. ஸ்டாலின்' : code === 'ADMK' ? 'எடப்பாடி' : 'சீமான்',
         leaderImage: `/leaders/${code.toLowerCase()}-${code === 'TVK' ? 'vijay' : code === 'DMK' ? 'stalin' : code === 'ADMK' ? 'eps' : 'seeman'}.png`,
         symbolImage: `/symbols/${code.toLowerCase()}.png`,
@@ -344,7 +353,15 @@ export default function App() {
             {/* Candidate battle */}
             {bottomConstituency && (bottomConstituency.candidates || bottomConstituency.topCandidates) && (
               <div className="mt-4 bg-white rounded-2xl shadow-2xl p-6">
-                <h3 className="text-center text-lg font-black text-gray-700 mb-4 uppercase tracking-wide">முதல் 3 வேட்பாளர்கள்</h3>
+                <div className="text-center mb-4 pb-4 border-b-2 border-gray-200">
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <div className="bg-red-600 text-white px-4 py-2 rounded-lg font-black text-lg">
+                      தொகுதி #{bottomConstituency.number}
+                    </div>
+                    <h3 className="text-2xl font-black text-gray-900">{bottomConstituency.name}</h3>
+                  </div>
+                  <p className="text-sm font-bold text-gray-600">முதல் 3 வேட்பாளர்கள்</p>
+                </div>
                 <div className="flex items-center justify-center gap-6">
                   {(bottomConstituency.candidates || bottomConstituency.topCandidates)?.slice(0, 3).map((candidate, idx) => (
                     <div key={idx} className="relative">
