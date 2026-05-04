@@ -45,13 +45,13 @@ const PARTY_MAP = {
     color: '#FF6600',
     fullName: 'Tamilaga Vettri Kazhagam'
   },
-  'All India Anna Dravida Munnetra Kazhagam': {
+  'All India Anna Dravida Munnetra Kazhagam - ADMK': {
     code: 'ADMK',
     tamil: 'அதிமுக',
     color: '#006400',
     fullName: 'All India Anna Dravida Munnetra Kazhagam'
   },
-  'All India Anna Dravida Munnetra Kazhagam (Tamil Nadu)': {
+  'All India Anna Dravida Munnetra Kazhagam - ADMK': {
     code: 'ADMK',
     tamil: 'அதிமுக',
     color: '#006400',
