@@ -126,12 +126,24 @@ export function enrichConstituency(constituency) {
     trailingLeaderTamil: trailing.leaderTamil,
     trailingLeaderImage: trailing.image,
     trailingSymbolImage: trailing.symbolImage,
+    candidates: (constituency.candidates || constituency.topCandidates || []).map((candidate) => {
+      const profile = getPartyProfile(candidate.partyCode);
+
+      return {
+        ...candidate,
+        partyColor: candidate.color,
+        symbolImage: profile.symbolImage,
+        image: candidate.imageUrl
+      };
+    }),
     topCandidates: (constituency.topCandidates || []).map((candidate) => {
       const profile = getPartyProfile(candidate.partyCode);
 
       return {
         ...candidate,
-        symbolImage: profile.symbolImage
+        partyColor: candidate.color,
+        symbolImage: profile.symbolImage,
+        image: candidate.imageUrl
       };
     })
   };

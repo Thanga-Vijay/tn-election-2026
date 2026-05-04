@@ -5,8 +5,73 @@ function formatIndianNumber(value) {
   return new Intl.NumberFormat('en-IN').format(value || 0);
 }
 
-export default function ConstituencyTable({ constituencies }) {
+export default function ConstituencyTable({ constituencies, compact = false }) {
   const [open, setOpen] = useState(false);
+
+  // Compact mode for sidebar display
+  if (compact) {
+    return (
+      <div className="space-y-2.5">
+        {constituencies.map((seat, idx) => (
+          <motion.div
+            key={`${seat.number}-${seat.name}`}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.05 }}
+            className="bg-white rounded-xl p-3.5 shadow-lg hover:shadow-xl transition-all border-l-4"
+            style={{ borderColor: seat.leadingPartyColor || seat.color || '#999' }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 flex-shrink-0 bg-gradient-to-br from-gray-900 to-gray-700 text-white rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
+                <div className="text-xs leading-none opacity-75">தொ.</div>
+                <div className="text-xl leading-none">{seat.number}</div>
+              </div>
+              
+              {(seat.leadingSymbolImage || seat.leadingPartySymbol) && (
+                <div className="w-14 h-14 flex-shrink-0 bg-gray-50 rounded-lg p-2 border-2 border-gray-200">
+                  <img 
+                    src={seat.leadingSymbolImage || seat.leadingPartySymbol} 
+                    alt={seat.leadingPartyCode}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
+              
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-black text-gray-900 truncate mb-1">{seat.name}</h3>
+                <p className="text-xs font-bold text-gray-700 truncate mb-1.5">
+                  {seat.leadingCandidate}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span 
+                    className="text-xs font-black px-2 py-0.5 rounded text-white"
+                    style={{ backgroundColor: seat.leadingPartyColor || seat.color || '#666' }}
+                  >
+                    {seat.leadingPartyCode}
+                  </span>
+                  <span className="text-xs font-bold text-gray-600 truncate">
+                    {seat.leadingPartyTamil}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="text-right shrink-0 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl px-3 py-2.5 shadow-sm border border-gray-200">
+                <div 
+                  className="text-2xl font-black leading-none"
+                  style={{ color: seat.leadingPartyColor || seat.color || '#666' }}
+                >
+                  {(seat.leaderVotes || seat.leadCandidateVotes || 0).toLocaleString('en-IN')}
+                </div>
+                <div className="text-xs text-gray-600 mt-1.5 font-bold">வாக்கு</div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
+
+  // Full table mode
 
   return (
     <section className="table-shell glass-panel rounded-3xl">
